@@ -1,17 +1,19 @@
-## Foundry
+## LOTTERY-ZIYAO-FOUNDRY
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**LOTTERY-ZIYAO-FOUNDRY is a Eth Based, automatically run by Chainlink Raffle Project.**
 
-Foundry consists of:
+LOTTERY-ZIYAO-FOUNDRY consists of:
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+-   **Raffle.sol**: Basic Logic is in this file including enterRaffle, Chainlink mechanism.
+  
+-   **DeployRaffle.sol**: Script that deploys the contract on chain.
+  
+-   **Interaction-EnterRaffle**: An example shows interaction with the contract.
+  
+-   **Anvil**: Mock deploy on the local anvil chain.
+  
+-   **frontEnd**: A demo showing how to interact with the contract on the fornt end.
 
-## Documentation
-
-https://book.getfoundry.sh/
 
 ## Usage
 
@@ -21,10 +23,10 @@ https://book.getfoundry.sh/
 $ forge build
 ```
 
-### Test
+### Deploy
 
 ```shell
-$ forge test
+$ forge deploy
 ```
 
 ### Format
@@ -45,7 +47,11 @@ $ forge snapshot
 $ anvil
 ```
 
-### Deploy
+### EnterRaffle
+
+```shell
+$ forge enter
+```
 
 ```shell
 $ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
