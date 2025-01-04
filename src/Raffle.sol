@@ -4,18 +4,15 @@ pragma solidity 0.8.28;
 
 import {VRFConsumerBaseV2Plus} from "@chainlink/contracts/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
 import {VRFV2PlusClient} from "@chainlink/contracts/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
-import {AutomationCompatibleInterface} from "@chainlink/contracts/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
+import {AutomationCompatibleInterface} from
+    "@chainlink/contracts/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
 
 contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     // Errors Definition
     error Raffle__SendMoreToEnterRaffle();
     error Raffle_Givemequicknode();
     error Raffle__EntranceNotOpenNow();
-    error Raffle__UpKeepNotNeeded(
-        uint256 balance,
-        uint256 numberOfMembers,
-        uint256 raffleState
-    );
+    error Raffle__UpKeepNotNeeded(uint256 balance, uint256 numberOfMembers, uint256 raffleState);
 
     // Type Declaration
     enum RaffleState {
@@ -26,8 +23,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     // VRF Declarations
     uint256 s_subscriptionId;
     address vrfCoordinator = 0x9DdfaCa8183c41ad55329BdeeD9F6A8d53168B1B;
-    bytes32 s_keyHash =
-        0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae;
+    bytes32 s_keyHash = 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae;
     uint32 callbackGasLimit = 500000;
     uint16 requestConfirmations = 3;
     uint32 numWords = 1;
@@ -46,11 +42,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     event RandomNumberUsed(uint256 indexed requestId);
     event WinnerPicked(address indexed winner);
 
-    constructor(
-        uint256 entranceFee,
-        uint256 interval,
-        uint256 subscriptionId
-    ) VRFConsumerBaseV2Plus(vrfCoordinator) {
+    constructor(uint256 entranceFee, uint256 interval, uint256 subscriptionId) VRFConsumerBaseV2Plus(vrfCoordinator) {
         i_entranceFee = entranceFee;
         s_subscriptionId = subscriptionId;
         s_RaffleState = RaffleState.OPEN;
@@ -71,13 +63,11 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     }
 
     // function upKeepCheck
-    function checkUpkeep(
-        bytes memory /* checkData */
-    )
+    function checkUpkeep(bytes memory /* checkData */ )
         public
         view
         override
-        returns (bool upkeepNeeded, bytes memory /* performData */)
+        returns (bool upkeepNeeded, bytes memory /* performData */ )
     {
         bool isOpen = s_RaffleState == RaffleState.OPEN;
         bool hasMember = s_players.length > 1;
@@ -87,14 +77,10 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         return (upkeepNeeded, "0x0");
     }
 
-    function performUpkeep(bytes calldata /* performData */) external override {
-        (bool upkeepNeeded, ) = checkUpkeep("");
+    function performUpkeep(bytes calldata /* performData */ ) external override {
+        (bool upkeepNeeded,) = checkUpkeep("");
         if (!upkeepNeeded) {
-            revert Raffle__UpKeepNotNeeded(
-                address(this).balance,
-                s_players.length,
-                uint256(s_RaffleState)
-            );
+            revert Raffle__UpKeepNotNeeded(address(this).balance, s_players.length, uint256(s_RaffleState));
         }
         s_RaffleState = RaffleState.CLOSE;
         requestRandomNumber();
@@ -109,9 +95,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
                 callbackGasLimit: callbackGasLimit,
                 numWords: numWords,
                 // Set nativePayment to true to pay for VRF requests with Sepolia ETH instead of LINK
-                extraArgs: VRFV2PlusClient._argsToBytes(
-                    VRFV2PlusClient.ExtraArgsV1({nativePayment: false})
-                )
+                extraArgs: VRFV2PlusClient._argsToBytes(VRFV2PlusClient.ExtraArgsV1({nativePayment: false}))
             })
         );
         emit RequestRandomNumber(requestId);
@@ -120,7 +104,8 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
 
     function fulfillRandomWords(
         uint256 requestId,
-        /* requestId */ uint256[] calldata randomWords
+        /* requestId */
+        uint256[] calldata randomWords
     ) internal override {
         uint256 randomNumber = randomWords[0];
         emit RandomNumberUsed(requestId);
@@ -135,7 +120,6 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         s_players = new address payable[](0);
         s_lastTimeStamp = block.timestamp;
         (bool success,) = s_winner.call{value: address(this).balance}("");
-        
     }
 
     receive() external payable {

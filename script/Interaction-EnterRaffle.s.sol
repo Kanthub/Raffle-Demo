@@ -11,8 +11,7 @@ interface IRaffle {
 
 contract EnterRaffleScript is Script {
     // 设置目标合约的地址
-    address constant RAFFLE_ADDRESS =
-        0x52d64aad6ca10b04EacA47EAf5DDc206BBDB0132;
+    address constant RAFFLE_ADDRESS = 0x52d64aad6ca10b04EacA47EAf5DDc206BBDB0132;
 
     uint256 entranceFee = 0.045 ether;
 
